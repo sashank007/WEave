@@ -1,0 +1,195 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>Project Delta</title>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.12/esri/css/main.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./index.css" />
+    <script src="https://js.arcgis.com/4.12/"></script>
+
+    <script src="./index.js"></script>
+
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+        >&times;</a
+      >
+      <a href="#">Alert: 32155</a>
+      <a href="#">Alert: 12134</a>
+      <a href="#">Alert: 13869</a>
+      <div id="new_alerts"></div>
+    </div>
+
+    <!-- Use any element to open the sidenav -->
+  </head>
+  <!-- <button id="all_alerts" onclick="openNav()">All Alerts</button> -->
+  <div id="main">
+    <button
+      type="button"
+      id="all_alerts"
+      data-loading-text="Loading..."
+      class="btn btn-primary"
+      onclick="openNav()"
+      autocomplete="off"
+    >
+      All Alerts
+    </button>
+    <button
+      type="button"
+      id="btn"
+      data-loading-text="Loading..."
+      class="btn btn-primary"
+      autocomplete="off"
+    >
+      Get Optimal Path
+    </button>
+
+    <button
+      type="button"
+      id="get_distances"
+      data-loading-text="Loading..."
+      class="btn btn-primary"
+      autocomplete="off"
+    >
+      Green Eyes
+    </button>
+
+      <button
+      type="button"
+      id="btn_crime_form"
+      data-loading-text="Loading..."
+      class="btn btn-primary"
+      autocomplete="off"
+    >
+      Report New Crime
+    </button>
+    
+    <button
+    type="button"
+    id="new_suspect_form"
+    data-loading-text="Loading..."
+    class="btn btn-primary"
+    onclick="openNav()"
+    autocomplete="off"
+  >
+    Report Suspect Spotting
+  </button>
+    
+  <button
+  type="button"
+  id="hide_all"
+  data-loading-text="Loading..."
+  class="btn btn-primary"
+  autocomplete="off"
+  >
+  Hide All 
+  </button>
+
+    
+     <label for="crimetext1", id = "crimelabel00", style = "display:none">Username:</label>
+    <input type="text" id="crimetext00" name="username" , style = "display:none", required
+       minlength="1" maxlength="10" size="10">
+    <label for="crimetext1", id = "crimelabel01", style = "display:none">User Age:</label>
+    <input type="text" id="crimetext01" name="userage" , style = "display:none", required
+       minlength="1" maxlength="3" size="3">
+    <label for="crimetext1", id = "crimelabel02", style = "display:none">User Sex:</label>
+    <input type="text" id="crimetext02" name="usersex" , style = "display:none", required
+       minlength="1" maxlength="20" size="10">
+    <label for="crimetext1", id = "crimelabel03", style = "display:none">Crime Latitude:</label>
+    <input type="text" id="crimetext03" name="crimelatitude" , style = "display:none", required
+       minlength="1" maxlength="20" size="10">
+    <label for="crimetext1", id = "crimelabel04", style = "display:none">Crime Longitude:</label>
+    <input type="text" id="crimetext04" name="crimelongitude" , style = "display:none", required
+       minlength="1" maxlength="20" size="10">
+    <label for="crimetext1", id = "crimelabel1", style = "display:none">Crime Intensity (0-5):</label>
+    <input type="text" id="crimetext1" name="crimeintensity" , style = "display:none", required
+       minlength="1" maxlength="1" size="1">
+    <label for="crimetext1", id = "crimelabel2", style = "display:none">Crime Description:</label>
+    <input type="text" id="crimetext2" name="crimedescription" , style = "display:none", required
+       minlength="1" maxlength="50" size="30">
+    <label for="", id = "crimelabel3", style = "display:none">Suspect Description:</label>
+    <label for="", id = "crimelabel4", style = "display:none">Ethnicity:</label>
+    <input type="text" id="crimetext3" name="Etnicity" , style = "display:none", required
+       minlength="1" maxlength="20" size="20">
+    <label for="", id = "crimelabel5", style = "display:none">Height:</label>
+    <input type="text" id="crimetext4" name="Height-feet", style = "display:none", required
+       minlength="1" maxlength="2" size="2">
+    <label for="", id = "crimelabel6", style = "display:none">Feet, </label>
+    <input type="text" id="crimetext5" name="Height-inches" , style = "display:none", required
+       minlength="1" maxlength="2" size="2">
+    <label for="", id = "crimelabel7", style = "display:none">Inches, </label>
+    <label for="", id = "crimelabel8", style = "display:none">Age:</label>
+    <input type="text" id="crimetext6" name="age" , style = "display:none", required
+       minlength="1" maxlength="3" size="3">
+    <label for="", id = "crimelabel9", style = "display:none">Other Physical Features/Clothing:</label>
+    <input type="text" id="crimetext7" name="other" , style = "display:none", required
+       minlength="1" maxlength="100" size="90">
+    <button type = "button", id = "submitnewcrimebutton", onClick = "getsetCrimeData()", style = "display:none">Submit New Crime Report</button>
+    
+    <label for="header", id = "header", style = "display:none">Thank you for submitting. You submitted: </label>
+    <label for="header", id = "resultstext1", style = "display:none">Alert Number: </label>
+    <label for="header", id = "mutable1", style = "display:none">crime.cID </label>
+    <label for="header", id = "resultstext11", style = "display:none">Your Username: </label>
+    <label for="header", id = "mutable11", style = "display:none">usernamevar </label>
+    <label for="header", id = "resultstext12", style = "display:none">Your Sex: </label>
+    <label for="header", id = "mutable12", style = "display:none">usersexvar </label>
+    <label for="header", id = "resultstext13", style = "display:none">Your Age: </label>
+    <label for="header", id = "mutable13", style = "display:none">useragevar </label>
+    <label for="header", id = "resultstext2", style = "display:none">Crime Intensity: </label>
+    <label for="header", id = "mutable2", style = "display:none">crime.cIntensity </label>
+    <label for="header", id = "resultstext3", style = "display:none">Crime Description: </label>
+    <label for="header", id = "mutable3", style = "display:none">crime.cDescription </label>
+    <label for="header", id = "resultstext4", style = "display:none"> Suspect Ethnicity: </label>
+    <label for="header", id = "mutable4", style = "display:none">crime.sEthnicity </label>
+    <label for="header", id = "resultstext5", style = "display:none">Suspect Height: Feet: </label>
+    <label for="header", id = "mutable5", style = "display:none">crime.cHeightFeet </label>
+    <label for="header", id = "resultstext6", style = "display:none">Inches: </label>
+    <label for="header", id = "mutable6", style = "display:none">crime.cHeight Inches </label>
+    <label for="header", id = "resultstext7", style = "display:none">Suspect Age: </label>
+    <label for="header", id = "mutable7", style = "display:none">crime.sAge </label>
+    <label for="header", id = "resultstext8", style = "display:none">Other Comments on Suspect: </label>
+    <label for="header", id = "mutable8", style = "display:none">crime.sOtherComments </label>
+    <label for="header", id = "resultstext9", style = "display:none">Crime Location (lat, long): </label>
+    <label for="header", id = "mutable9", style = "display:none">crime.cLat, crime.cLongit </label>
+    <label for="header", id = "resultstext10", style = "display:none">Crime Time: </label>
+    <label for="header", id = "mutable10", style = "display:none">crime.cHours:crime.cMinutes:crime.cSeconds </label>
+    
+    <label for="crimetext1", id = "suspectlabel1", style = "display:none">Alert Number:</label>
+    <input type="text" id="suspecttext1" name="inputAlertNumber" , style = "display:none", required
+       minlength="1" maxlength="10" size="7">
+    <label for="crimetext1", id = "suspectlabel2", style = "display:none">Latitude: </label>
+    <input type="text" id="suspecttext2" name="newlatitude" , style = "display:none", required
+       minlength="1" maxlength="10" size="7">
+    <label for="crimetext1", id = "suspectlabel3", style = "display:none">Longitude: </label>
+    <input type="text" id="suspecttext3" name="newlongitude" , style = "display:none", required
+       minlength="1" maxlength="10" size="7">
+    <button type = "button", id = "suspectconfirmdetailsbutton", onClick = "getSetReportData()", style = "display:none">Check Details</button>
+    
+    <label for="header2", id = "header2", style = "display:none">Thank you for submitting. You submitted: </label>
+    <label for="header2", id = "suspectresultstext1", style = "display:none">Alert Number: </label>
+    <label for="header2", id = "suspectmutable1", style = "display:none">inputCrimeID </label>
+    <label for="header2", id = "suspectresultstext2", style = "display:none">Suspect's Latitude: </label>
+    <label for="header2", id = "suspectmutable2", style = "display:none">newSightingLat </label>
+    <label for="header2", id = "suspectresultstext3", style = "display:none">Suspect's Longitude: </label>
+    <label for="header2", id = "suspectmutable3", style = "display:none">newSightingLongit </label>
+    <label for="header2", id = "suspectresultstext4", style = "display:none">Sighting Time: </label>
+    <label for="header2", id = "suspectmutable4", style = "display:none">newSightingTime </label>
+    
+
+    
+    <body>
+      <div id="viewDiv"></div>
+    </body>
+  </div>
+</html>
