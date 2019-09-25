@@ -482,17 +482,17 @@ require([
       );
       console.log("duration of alert : ", duration_of_alert);
       executeServiceAreaTask(serviceAreaParams);
-      setInterval(() => {
-        duration_of_alert = duration_of_alert + 1;
+      // setInterval(() => {
+      //   duration_of_alert = duration_of_alert + 1;
 
-        driveTimeCutoffs = [duration_of_alert];
-        var serviceAreaParams = createServiceAreaParams(
-          locationGraphic,
-          driveTimeCutoffs,
-          view.spatialReference
-        );
-        executeServiceAreaTask(serviceAreaParams);
-      }, 60000);
+      //   driveTimeCutoffs = [duration_of_alert];
+      //   var serviceAreaParams = createServiceAreaParams(
+      //     locationGraphic,
+      //     driveTimeCutoffs,
+      //     view.spatialReference
+      //   );
+      //   executeServiceAreaTask(serviceAreaParams);
+      // }, 60000);
     }
   });
 
