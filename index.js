@@ -404,17 +404,18 @@ require([
       );
       console.log("duration of alert : ", duration_of_alert);
       executeServiceAreaTask(serviceAreaParams);
-      setInterval(() => {
-        duration_of_alert = duration_of_alert + 1;
+      //@TODO: Uncomment this for realtime incraesing of drivetime
+      // setInterval(() => {
+      //   duration_of_alert = duration_of_alert + 1;
 
-        driveTimeCutoffs = [duration_of_alert];
-        var serviceAreaParams = createServiceAreaParams(
-          locationGraphic,
-          driveTimeCutoffs,
-          view.spatialReference
-        );
-        executeServiceAreaTask(serviceAreaParams);
-      }, 60000);
+      //   driveTimeCutoffs = [duration_of_alert];
+      //   var serviceAreaParams = createServiceAreaParams(
+      //     locationGraphic,
+      //     driveTimeCutoffs,
+      //     view.spatialReference
+      //   );
+      //   executeServiceAreaTask(serviceAreaParams);
+      // }, 60000);
       // createPopUp(point);
     }
   }
@@ -424,20 +425,20 @@ require([
   // task for getting drive time area
   var serviceAreaTask = new ServiceAreaTask({
     url:
-      "https://utility.arcgis.com/usrsvcs/appservices/1OMa1lF2EYi4VW8K/rest/services/World/ServiceAreas/NAServer/ServiceArea_World/solveServiceArea"
+      "https://utility.arcgis.com/usrsvcs/appservices/X7HJrhED7UTUR14q/rest/services/World/ServiceAreas/NAServer/ServiceArea_World/solveServiceArea"
   });
 
   // task for getting routing
 
   var routeTask = new RouteTask({
     url:
-      "https://utility.arcgis.com/usrsvcs/appservices/37XeLU6q64gs3IV4/rest/services/World/Route/NAServer/Route_World/solve"
+      "https://utility.arcgis.com/usrsvcs/appservices/Nbt2hNn9PwMrxQiQ/rest/services/World/Route/NAServer/Route_World/solve"
   });
 
   //locator task for popups
   var locatorTask = new Locator({
     url:
-      "https://utility.arcgis.com/usrsvcs/appservices/NswB8BYB8p3in6Al/rest/services/World/GeocodeServer/reverseGeocode"
+      "https://utility.arcgis.com/usrsvcs/appservices/SEtqLpLGnblWJpTH/rest/services/World/GeocodeServer/reverseGeocode"
   });
 
   view.on("click", function(event) {
@@ -639,23 +640,14 @@ require([
     }
   }
   function executeServiceAreaTask(serviceAreaParams) {
-    // for (var i = 0; i < view.graphics.toArray().length; i++) {
-    //   console.log("garphics :  ", view.graphics.toArray()[i]);
-    //   console.log("polygons  :", polygons_stack[i]);
-    //   if (view.graphics.toArray()[i].geometry.type === "polygon") {
-    //     console.log("removign polygon...");
-    //     view.graphics.splice(i, 1);
-    //   }
-    // }
-    // doFirst();
     function callb(x, y) {
       if (x != prev_x && y != prev_y) {
         prev_x = x;
         prev_y = y;
-
-        var point = new Point(y, x);
+        console.log("creating new alert");
+        var point = new Point(x, y);
         var locationGraphic = createGraphic("nodes", point);
-        createPopUp(point, 1, "");
+        createPopUp(point, 1);
       }
     }
     setInterval(() => userAction(callb), 5000);
@@ -741,11 +733,9 @@ const userAction = async callback => {
 
     console.log("allAlerts array for alerts : ", allAlerts_array);
 
-    x = allAlerts_array[0][1].location_x;
-
-    y = allAlerts_array[0][1].location_y;
-
-    console.log("x ,y ", x, y);
+    x = allAlerts_array[allAlerts_array.length - 1][1].location_x;
+    y = allAlerts_array[allAlerts_array.length - 1][1].location_y;
+    console.log("alers x and y : ", x, y);
   }
 
   callback(x, y);
@@ -777,21 +767,13 @@ const getAlert = async callback => {
       return b[0].time > a[0].time ? 1 : b[0].time === a[0].time ? 0 : -1;
     });
 
-    console.log("allAlerts array : ", allAlerts_array);
-
     x = allAlerts_array[allAlerts_array.length - 1][1].location_x;
 
     y = allAlerts_array[allAlerts_array.length - 1][1].location_y;
     // desc = allAlerts_array[allAlerts_array.length - 1][1].suspect_description;
-
-    console.log("x ,y ", x, y);
   }
 
   callback(x, y);
-
-  // let point = new Point(y, x);
-  // var locationGraphic = createGraphic("nodes", point);
-  // createPopUp(point);
 };
 function doFirst() {
   setInterval(() => {
@@ -801,9 +783,7 @@ function doFirst() {
       .then(response => response.json())
       .then(data => {
         var allAlerts = data;
-        console.log("data : ", data);
         var length = Object.keys(allAlerts.alerts).length;
-        console.log("length:", length);
         if (length > 0) {
           // console.log("identified new alert...");
           allAlerts_array = [];
@@ -822,27 +802,35 @@ function doFirst() {
           let point = new Point(y, x);
         });
       });
-    // var d = await userAction();
-    // var allAlerts = await d;
-    // var length = Object.keys(allAlerts.alerts).length;
-    // console.log("length:", length);
-    // if (length > 0) {
-    //   // console.log("identified new alert...");
-    //   allAlerts_array = [];
-    //   {
-    //     for (let i = 0; i < Object.entries(allAlerts.alerts).length; i++) {
-    //       allAlerts_array.push(Object.entries(allAlerts.alerts)[i]);
-    //     }
-    //   }
-    //   let x = allAlerts_array[0][1].location_x;
-    //   let y = allAlerts_array[0][1].location_y;
-    //   let point = new Point(y, x);
-    //   var locationGraphic = createGraphic("nodes", point);
-    //   createPopUp(point);
-    //   console.log("all alerts :", allAlerts_array[0][1]);
-    // }
-    // if (allAlerts.length > prev_alerts_length) {
-    //   console.log("new alerts");
-    // }
   }, 5000);
 }
+
+/*
+first alert : 
+
+
+{
+	"crime_id":1,
+	"suspect_description":"tall blue-shirt white-shirt black-jeans",
+	"crime_severity": 5,
+	"location_x":-111.9718750034568,
+	"location_y": 33.4248227244354,
+	"suspect_spotted":"True",	
+	"time":"51141307"
+	
+}
+
+
+  {
+	"crime_id":1,
+	"suspect_description":"tall blue-shirt white-shirt black-jeans",
+	"crime_severity": 5,
+	"location_x":-111.95312902369697,
+	"location_y":33.40264474836072,
+	"suspect_spotted":"True",	
+	"time":"51141307"
+	
+}
+
+
+*/
