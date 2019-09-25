@@ -48,6 +48,25 @@ require([
   var userName, userAge, userSex;
   var inputCrimeID, newSightingLat, newSightingLongit, newSightingTime;
 
+  var minutesLabel = document.getElementById("minutes");
+  var secondsLabel = document.getElementById("seconds");
+  var totalSeconds = 300;
+
+  function setTime() {
+    ++totalSeconds;
+    secondsLabel.innerHTML = pad(totalSeconds % 60);
+    minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+  }
+
+  function pad(val) {
+    var valString = val + "";
+    if (valString.length < 2) {
+      return "0" + valString;
+    } else {
+      return valString;
+    }
+  }
+
   document.getElementById("btn_crime_form").onclick = function fun() {
     newCrimeForm();
   };
@@ -355,6 +374,7 @@ require([
       prev_alert_y = y;
       var point = new Point(y, x);
       var locationGraphic = createGraphic("start", point);
+      createPopUp(point, 0);
       createNewPoint(
         33.40074973530103,
         -111.9532251746038,
@@ -371,6 +391,8 @@ require([
         "https://cdn4.iconfinder.com/data/icons/avatars-21/512/avatar-circle-human-male-4-512.png"
       );
       var graphicsArr = view.graphics.toArray();
+      setInterval(setTime, 1000);
+
       console.log("new suspect spotted :", locationGraphic);
       alertMapPoint = graphicsArr[0];
       var duration_of_alert = 5;
@@ -445,7 +467,7 @@ require([
       alertMapPoint = graphicsArr[0];
     } else if (!isDistancePoint) {
       var locationGraphic = createGraphic("nodes", event.mapPoint);
-      createPopUp(event.mapPoint);
+      createPopUp(event.mapPoint, 1, "");
       console.log("new   : ", event.mapPoint);
     }
 
@@ -486,24 +508,36 @@ require([
   }
 
   view.popup.autoOpenEnabled = false;
-  function createPopUp(point) {
+  function createPopUp(point, flag) {
     console.log("point : ", point);
     var lat = Math.round(point.latitude * 1000) / 1000;
     var lon = Math.round(point.longitude * 1000) / 1000;
 
     var ts = new Date();
 
-    view.popup.open({
-      // Set the popup's title to the coordinates of the clicked location
-      title:
-        "Suspect Last Spotted\n" +
-        " " +
-        ts.toLocaleDateString() +
-        " " +
-        ts.toLocaleTimeString(),
-      location: point // Set the location of the popup to the clicked location
-    });
-
+    if (flag === 1) {
+      view.popup.open({
+        // Set the popup's title to the coordinates of the clicked location
+        title:
+          "Suspect Last Spotted\n" +
+          " " +
+          ts.toLocaleDateString() +
+          " " +
+          ts.toLocaleTimeString(),
+        location: point // Set the location of the popup to the clicked location
+      });
+    } else {
+      view.popup.open({
+        // Set the popup's title to the coordinates of the clicked location
+        title:
+          "New Crime Alert!!!\n" +
+          " " +
+          ts.toLocaleDateString() +
+          " " +
+          ts.toLocaleTimeString(),
+        location: point // Set the location of the popup to the clicked location
+      });
+    }
     var params = {
       location: point
     };
@@ -582,6 +616,7 @@ require([
       }
     }
     for (var i = 0; i < allRoutes.length; i++) {
+      console.log("all routes :", allRoutes[i]);
       var routeParams = new RouteParameters({
         stops: new FeatureSet({
           features: allRoutes[i]
@@ -597,7 +632,6 @@ require([
             // color:[119, 153, 204],
             width: 2
           };
-          console.log("result route : ", result.route);
 
           view.graphics.add(result.route);
         });
@@ -621,7 +655,7 @@ require([
 
         var point = new Point(y, x);
         var locationGraphic = createGraphic("nodes", point);
-        createPopUp(point);
+        createPopUp(point, 1, "");
       }
     }
     setInterval(() => userAction(callb), 5000);
@@ -705,11 +739,11 @@ const userAction = async callback => {
       return b[0].time > a[0].time ? 1 : b[0].time === a[0].time ? 0 : -1;
     });
 
-    console.log("allAlerts array : ", allAlerts_array);
+    console.log("allAlerts array for alerts : ", allAlerts_array);
 
-    x = allAlerts_array[allAlerts_array.length - 1][1].location_x;
+    x = allAlerts_array[0][1].location_x;
 
-    y = allAlerts_array[allAlerts_array.length - 1][1].location_y;
+    y = allAlerts_array[0][1].location_y;
 
     console.log("x ,y ", x, y);
   }
@@ -724,6 +758,7 @@ const userAction = async callback => {
 const getAlert = async callback => {
   let x = null;
   let y = null;
+  let desc = null;
   const response = await fetch(
     "https://1wd89o3osa.execute-api.us-east-1.amazonaws.com/dev/get_all_crimes"
   );
@@ -747,6 +782,7 @@ const getAlert = async callback => {
     x = allAlerts_array[allAlerts_array.length - 1][1].location_x;
 
     y = allAlerts_array[allAlerts_array.length - 1][1].location_y;
+    // desc = allAlerts_array[allAlerts_array.length - 1][1].suspect_description;
 
     console.log("x ,y ", x, y);
   }
