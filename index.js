@@ -448,6 +448,7 @@ require([
       distancePointers.push();
     } else if (view.graphics.length === 0 && !isDistancePoint) {
       var locationGraphic = createGraphic("start", event.mapPoint);
+      setInterval(setTime, 1000);
       createNewPoint(
         33.40074973530103,
         -111.9532251746038,
