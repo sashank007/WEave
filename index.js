@@ -452,7 +452,7 @@ require([
       createNewPoint(
         33.40074973530103,
         -111.9532251746038,
-        "https://cdn.icon-icons.com/icons2/582/PNG/512/woen-2_icon-icons.com_55032.png"
+        "https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Bearded_Man-17-512.png"
       );
       createNewPoint(
         33.40167893328508,

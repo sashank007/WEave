@@ -18,7 +18,9 @@ index.#btn {
   font-size: 0.3rem;
   padding: 5px;
 } */
-
+body {
+  overflow-y: hidden;
+}
 html,
 body,
 #viewDiv {
@@ -26,6 +28,7 @@ body,
   margin: 0;
   height: 100%;
   width: 100%;
+  /* overflow: hidden; */
 }
 
 /* The side navigation menu */
